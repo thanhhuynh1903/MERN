@@ -3,7 +3,7 @@ import { FaRegUser } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { useState, useEffect } from "react";
-import DropdownLinkButton from "../../atom/profileSetup/ProfileSetup";
+import DropdownLinkButton from "../profilesetup/profileSetup";
 export default function HeaderIcons() {
   const token = localStorage.getItem("accessToken") || "";
   const [userData, setUserData] = useState(null);
