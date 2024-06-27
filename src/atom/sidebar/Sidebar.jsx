@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import GetAllBrand from "../../api/getAllBrand";
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-export default function Sidebar() {
+
+export default function Sidebar({ setSelectedBrand }) {
   const [brandList, setBrandList] = useState([]);
 
   const fetchApi = async () => {
@@ -14,22 +14,23 @@ export default function Sidebar() {
       console.log(error);
     }
   };
-  console.log(brandList);
+
   useEffect(() => {
     fetchApi();
   }, []);
 
   return (
-    <section className="sticky top-0 bg-white dark:bg-gray-900 space-y-3 lg:w-[30%] lg:px-2 lg:space-y-4 border-r-2 border-gray-200 my-2">
+    <section className="sticky top-0 bg-white dark:bg-gray-900 space-y-3 lg:min-w-[20%] lg:px-2 lg:space-y-4 border-r-2 border-gray-200 my-2 mr-[1%]">
       <div className="container px-6 py-8 h-full">
         <div className="lg:flex lg:-mx-2 sticky top-0">
-          <div className="w-full ">
+          <div className="w-full">
             <div
-              className={`flex w-full justify-between items-center mb-2  border-b-2 py-2`}
+              className={`flex w-full justify-between items-center mb-2 border-b-2 py-2`}
             >
               <Link
-                href="#"
+                to="/home"
                 className="block font-medium text-gray-500 dark:text-gray-300 hover:underline"
+                onClick={() => setSelectedBrand(null)}
               >
                 All brands
               </Link>
@@ -38,11 +39,12 @@ export default function Sidebar() {
             {brandList.map((item, index) => (
               <div
                 key={index}
-                className={`flex w-full justify-between items-center mb-2  border-b-2 py-2`}
+                className={`flex w-full justify-between items-center mb-2 border-b-2 py-2`}
               >
                 <Link
-                  href="#"
+                  to="#"
                   className="block font-medium text-gray-500 dark:text-gray-300 hover:underline"
+                  onClick={() => setSelectedBrand(item._id)}
                 >
                   {item.brandName}
                 </Link>

@@ -6,12 +6,15 @@ import InforProduct from "../../atom/InforProduct.jsx/InforProduct";
 import Review from "../../atom/Review/Review";
 import Comment from "../../atom/Comments/Comment";
 import GetAllWatchbyId from "../../api/GetAllWatchbyId";
+import { useCommentContext } from "../../context/CommentContext";
 
 export default function ProductDetail() {
   const { setShowSidebar } = useSidebar();
   const { id } = useParams();
-  const [watchData, setWatchData] = useState(null);
+  const { commentPosted, resetCommentPosted } = useCommentContext();
 
+  const [watchData, setWatchData] = useState(null);
+console.log(watchData);
   useEffect(() => {
     setShowSidebar(false); // Hide the sidebar
     return () => {
@@ -30,8 +33,14 @@ export default function ProductDetail() {
     };
 
     fetchWatchData();
-  }, [id]);
-console.log(watchData);
+  }, [id,commentPosted]);
+
+  useEffect(() => {
+    if (commentPosted) {
+      // Reset the commentPosted state after refreshing
+      resetCommentPosted();
+    }
+  }, [commentPosted, resetCommentPosted]);
   return (
     <div>
       <div className="flex justify-center w-full mb-5">

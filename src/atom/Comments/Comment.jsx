@@ -3,9 +3,11 @@ import Ratings from "../Ratings/Ratings";
 import AddComment from "../../api/AddComment"; // Assuming AddComment handles API interaction
 import { useParams } from "react-router";
 import { jwtDecode } from "jwt-decode"; // Assuming this is for decoding JWT tokens
+import { useCommentContext } from '../../context/CommentContext'
 
 export default function Comment() {
   const { id } = useParams(); // Assuming you're using id from URL params
+  const { markCommentPosted } = useCommentContext();
   const token = localStorage.getItem("accessToken") || "";
   const [content, setContent] = useState({
     rating: 0, // Initialize rating state
@@ -59,6 +61,8 @@ export default function Comment() {
         content: "",
         authorId: content.authorId, // Preserve authorId for next comment
       });
+      markCommentPosted(); // Mark comment as posted successfully
+
       setErrorMessage(""); // Clear error message after successful submission
     } catch (error) {
       // Handle error scenario (e.g., show an error message)

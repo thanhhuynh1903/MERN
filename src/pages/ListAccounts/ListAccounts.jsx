@@ -3,40 +3,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import TableListBrands from '../../atom/table/TableListBrands';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AddBrandModal from '../../atom/AddBrandModal/AddBrandModal';
 import UpdateBrandModal from '../../atom/UpdateBrandModal/UpdateBrandModal';
-import GetAllBrand from '../../api/getAllBrand';
 
-function ListBrands() {
+function ListAccounts() {
     const [openAdd, setOpenAdd] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
-    const [selectedBrandId, setSelectedBrandId] = useState(null);
-    const [brands, setBrands] = useState([]); // State to hold the list of brands
-
-    useEffect(() => {
-        // Fetch the initial list of brands when the component mounts
-        fetchBrands();
-    }, []);
-
-    const fetchBrands = async () => {
-        try {
-            const response = await GetAllBrand(); // Fetch the list of brands
-            setBrands(response); // Update the state with the fetched brands
-        } catch (error) {
-            console.error('Error fetching brands:', error);
-        }
-    };
-
-    const handleUpdateModalOpen = (brandId) => {
-        setSelectedBrandId(brandId);
-        setOpenUpdate(true);
-    };
-
-    const addBrandToList = (newBrand) => {
-        setBrands((prevBrands) => [...prevBrands, newBrand]); // Add the new brand to the list
-    };
-
     return (
         <>
             <div className="text-4xl font-sans font-semibold">Brands Management</div>
@@ -80,20 +53,11 @@ function ListBrands() {
                 <TableListBrands
                     open={openUpdate}
                     handleClose={() => setOpenUpdate(false)}
-                    handleOpen={handleUpdateModalOpen}
-                    brands={brands} // Pass the brands to TableListBrands
+                    handleOpen={() => setOpenUpdate(true)}
                 />
             </div>
-            <AddBrandModal
-                open={openAdd}
-                handleClose={() => setOpenAdd(false)}
-                addBrandToList={addBrandToList} // Pass addBrandToList to AddBrandModal
-            />
-            <UpdateBrandModal
-                open={openUpdate}
-                handleClose={() => setOpenUpdate(false)}
-                brandId={selectedBrandId}
-            />
+            <AddBrandModal open={openAdd} handleClose={() => setOpenAdd(false)} />
+            <UpdateBrandModal open={openUpdate} handleClose={() => setOpenUpdate(false)} />
         </>
     );
 }

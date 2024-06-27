@@ -6,10 +6,13 @@ import Login from "./pages/Login/Login";
 import HomeLayout from "./layouts/HomeLayout/HomeLayout";
 import { SidebarProvider } from "./context/SidebarContext";
 import AdminLayout from "./layouts/HomeLayout/AdminLayout";
+import { CommentProvider } from './context/CommentContext';
+
 export default function App() {
   return (
     <div>
       <BrowserRouter>
+      <CommentProvider>
         <SidebarProvider>
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
@@ -43,6 +46,7 @@ export default function App() {
             </Route>
           </Routes>
         </SidebarProvider>
+        </CommentProvider>
       </BrowserRouter>
     </div>
   );

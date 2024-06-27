@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export default function FilterBar() {
+export default function FilterBar({quantity}) {
   const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function FilterBar() {
 
   return (
     <div className={`flex items-center justify-between text-sm tracking-widest uppercase my-4 pl-2 ${isSticky ? 'border-2 sticky top-0 bg-white drop-shadow-md' : ''}`}>
-      <p className="text-gray-500 dark:text-gray-300">6 Items</p>
+      <p className="text-gray-500 dark:text-gray-300">{quantity} Items</p>
       <div className="flex items-center">
         <p className="text-gray-500 dark:text-gray-300 pr-2">Sort</p>
         <select className="font-small text-gray-700 bg-transparent dark:text-gray-500 focus:outline-none text-[15px]">

@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import AddBrand from '../../api/AddBrand';
 
 const style = {
     position: 'absolute',
@@ -24,16 +25,20 @@ const validationSchema = Yup.object({
     brandName: Yup.string().required('Brand Name is required'),
 });
 
-export default function AddBrandModal({ open, handleClose }) {
+export default function AddBrandModal({ open, handleClose, addBrandToList }) {
     const formik = useFormik({
         initialValues: {
             brandName: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            // Handle form submission
-            console.log(values);
-            // handleClose();
+        onSubmit: async (values) => {
+            try {
+                const newBrand = await AddBrand(values);
+                addBrandToList(newBrand); // Update the brand list
+                handleClose();
+            } catch (error) {
+                console.error('Error adding brand:', error);
+            }
         },
     });
 

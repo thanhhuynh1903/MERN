@@ -40,6 +40,14 @@ const adminRoutes = [
       path: '/admin/brands',
       component: ListBrands,
   },
+  {
+    path: '/admin/watches',
+    component: ListBrands,
+},
+{
+  path: '/admin/accounts',
+  component: ListBrands,
+},
 ]
 
 

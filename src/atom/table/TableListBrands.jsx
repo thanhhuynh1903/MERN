@@ -1,72 +1,80 @@
+// src/components/TableListBrands.jsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { useState } from 'react';
-import Moreicon from '../MoreIcon/MoreIcon';
+import GetAllBrand from '../../api/getAllBrand';
+import DeleteBrand from '../../api/DeleteBrand';
+import Moreicon from "../../atom/MoreIcon/MoreIcon"
 
 export default function TableListBrands({ open, handleClose, handleOpen }) {
+    const [rowList, setRowList] = React.useState([]);
+
+    const fetchApi = async () => {
+        try {
+            const response = await GetAllBrand();
+            // Add sequential 'id' field to each row
+            const rowsWithSequentialId = response.map((row, index) => ({
+                id: index + 1, // Sequential ID starting from 1
+                ...row,
+            }));
+            setRowList(rowsWithSequentialId);
+        } catch (error) {
+            console.error('Error fetching brand list:', error);
+            // Handle error state or show error message to user
+        }
+    }
+
+    React.useEffect(() => {
+        fetchApi();
+    }, []);
+
+    const refreshBrandList = async () => {
+        try {
+            await fetchApi();
+        } catch (error) {
+            console.error('Error refreshing brand list:', error);
+        }
+    };
+
+    const handleDeleteBrand = async (brandId) => {
+        try {
+            await DeleteBrand(brandId);
+            refreshBrandList(); // Refresh brand list after deletion
+        } catch (error) {
+            console.error('Error deleting brand:', error);
+            // Optionally: handle error (e.g., show an error message)
+        }
+    };
+
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
-        {
-            field: 'firstName',
-            headerName: 'First name',
-            width: 150,
-            editable: true,
-        },
-        {
-            field: 'lastName',
-            headerName: 'Last name',
-            width: 150,
-            editable: true,
-        },
-        {
-            field: 'age',
-            headerName: 'Age',
-            type: 'number',
-            width: 110,
-            editable: true,
-        },
-        {
-            field: 'fullName',
-            headerName: 'Full name',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            width: 160,
-            valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-        },
+        { field: 'brandName', headerName: 'Brand Name', width: 250 },
         {
             field: 'action',
             headerName: 'Action',
-            description: 'This column has a value getter and is not sortable.',
+            description: 'Action Column',
             sortable: false,
             width: 160,
-            renderCell: (params) => <Moreicon open={open} handleClose={handleClose} handleOpen={handleOpen} />,
+            renderCell: (params) => (
+                <Moreicon
+                    brandId={params.row._id} // Assuming '_id' is the brand ID field
+                    handleOpen={handleOpen}
+                    handleClose={handleClose}
+                    refreshBrandList={refreshBrandList} // Pass refresh function to Moreicon
+                />
+            ),
         },
     ];
-    const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14 },
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 31 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 11 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-    ];
+
     return (
-        <Box sx={{ height: 400, width: '100%' }}>
+        <Box sx={{ height: 400, width: '99%' }}>
             <DataGrid
-                rows={rows}
+                rows={rowList}
                 columns={columns}
-                initialState={{
-                    pagination: {
-                        paginationModel: {
-                            pageSize: 5,
-                        },
-                    },
-                }}
-                pageSizeOptions={[5]}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                pagination
+                disableSelectionOnClick
                 sx={{
                     '& .MuiDataGrid-columnHeader': {
                         backgroundColor: '#2d3748',

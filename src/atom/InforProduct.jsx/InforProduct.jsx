@@ -34,7 +34,7 @@ export default function InforProduct({watch}) {
               {Array.from({ length: watch?.comments[0]?.rating }, (_, i) => (
               <FaStar key={i} className="mr-1 text-yellow-500" />
             ))}
-            {Array.from({ length: 5 - watch?.comments[0]?.rating }, (_, i) => (
+            {Array.from({ length: 3 - watch?.comments[0]?.rating }, (_, i) => (
               <CiStar key={i} className="mr-1 text-gray-300" />
             ))}
               </div>

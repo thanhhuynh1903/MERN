@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import UpdateBrand from '../../api/UpdateBrand';
 
 const style = {
     position: 'absolute',
@@ -24,16 +25,21 @@ const validationSchema = Yup.object({
     brandName: Yup.string().required('Brand Name is required'),
 });
 
-export default function UpdateBrandModal({ open, handleClose }) {
+export default function UpdateBrandModal({ open, handleClose, brandId, refreshBrandList }) {
     const formik = useFormik({
         initialValues: {
             brandName: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            // Handle form submission
-            console.log(values);
-            // handleClose();
+        onSubmit: async (values) => {
+            try {
+                await UpdateBrand(brandId, { brandName: values.brandName });
+                handleClose();
+                refreshBrandList(); // Refresh brand list after update
+            } catch (error) {
+                console.error('Error updating brand:', error);
+                // Optionally: handle error (e.g., show an error message)
+            }
         },
     });
 
