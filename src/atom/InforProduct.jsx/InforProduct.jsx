@@ -9,26 +9,38 @@ import { AiOutlineSafetyCertificate } from "react-icons/ai";
 import { GiRecycle } from "react-icons/gi";
 import { CiShoppingBasket } from "react-icons/ci";
 
-export default function InforProduct() {
+export default function InforProduct({watch}) {
+
+  const extractDay = (dateString) => {
+    return parseInt(dateString?.split('-')[2], 10);
+  };
+  
+  const subtractDays = (dateString1, dateString2) => {
+    const day1 = extractDay(dateString1);
+    const day2 = extractDay(dateString2);
+    return day2 - day1;
+  };
+
     const name = [
-        { label: "Weight* ", value: "40gram" },
-        { label: "Size*", value: "XL" },
-        { label: "Color*", value: ["green ","yellow"," black "] },
+        { label: "Brand*", value: watch?.brand?.brandName },
+        { label: "Automatic*", value: watch?.Automatic },
       ];
   return (
     <div className="z-0 col-span-6 lg:!mb-0 w-full lg:w-5/6">
           <div className="w-full flex justify-between">
-            <h2 className="text-xl font-bold">Tyson</h2>
+            <h2 className="text-xl font-bold">{watch?.watchName}</h2>
             <div className="flex items-center justify-center">
               <div className="flex text-xl">
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <CiStar />
-                <CiStar />
+              {Array.from({ length: watch?.comments[0]?.rating }, (_, i) => (
+              <FaStar key={i} className="mr-1 text-yellow-500" />
+            ))}
+            {Array.from({ length: 5 - watch?.comments[0]?.rating }, (_, i) => (
+              <CiStar key={i} className="mr-1 text-gray-300" />
+            ))}
               </div>
               <span className="mx-5 font-bold underline text-gray-300">
-                1 review
+              {watch?.comments.length} review
+              {watch?.comments.length !== 1 ? "s" : ""}
               </span>
             </div>
           </div>
@@ -37,16 +49,16 @@ export default function InforProduct() {
               PRX Powermatic 80 Automatic Blue Dial Men's Watch
             </p>
             <p className="text-gray-700 mb-2">
-              <strong>Item No</strong>.12345656
+              <strong>Item No. </strong>{watch?._id}
             </p>
             <span className="bg-green-200 border rounded-md py-1 text-[13px] font-bold px-2">
               IN STOCK
             </span>
             <hr className="w-full my-5 border-gray-900 " />
             <div>
-              {name.map((item, index) => (
+              {name?.map((item, index) => (
                 <div key={index}>
-                  <DisplayField label={item.label} value={item.value} />
+                  <DisplayField label={item?.label} value={item?.value} />
                 </div>
               ))}
             </div>
@@ -55,7 +67,7 @@ export default function InforProduct() {
               <h1 className="text-[#787878] mt-2 font-medium text-xl">
                 Retail
               </h1>
-              <span className="text-[40px] font-semibold">$174.99</span>
+              <span className="text-[40px] font-semibold">${watch?.price}</span>
               <div className="flex gap-4 my-2">
                 <button className="flex items-center justify-center w-3/6 px-2 py-2 mt-4 font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
                   <CiShoppingBasket className="text-[25px]" />
@@ -100,17 +112,7 @@ export default function InforProduct() {
             <hr className="w-full my-5 border-gray-900 " />
             <div className="w-full">
               <p>
-                Stainless steel case with a stainless steel bracelet with yellow
-                gold-plated accents. Fixed yellow gold-plated bezel. Ivory dial
-                with yellow gold-tone hands and index hour markers. Minute
-                markers around the outer rim. Dial Type: Analog. Date display at
-                the 3 o'clock position. Tissot Calibre Powermatic 80 (C07.111)
-                automatic movement with an 80-hour power reserve. Scratch
-                resistant sapphire crystal. Pull / push crown. Skeleton case
-                back. Round case shape. Case size: 41 mm. Case thickness: 9.75
-                mm. Band width: 20 mm. Deployment clasp with a push button
-                release. Water resistant at 50 meters / 165 feet. Functions:
-                date,
+                {watch?.watchDescription}
               </p>
             </div>
           </div>
@@ -137,17 +139,17 @@ export default function InforProduct() {
             <ul className="list-disc ml-5">
               <li>
                 <span>
-                Hanoi inner city: 1-2 days
+                Hanoi inner city: {subtractDays(watch?.createdAt,watch?.updatedAt)} days
                 </span>
               </li>
               <li>
                 <span className="text-center">
-                Miền Trung: 3 – 5 ngày
+                Miền Trung: {watch?.createdAt?.split('T')[0]}
                 </span>
               </li>
               <li>
                 <span className="text-center">
-                Miền Nam: 5 – 7 ngày
+                Miền Nam:  {watch?.updatedAt?.split('T')[0]}
 
                 </span>
               </li>

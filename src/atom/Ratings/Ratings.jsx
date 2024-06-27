@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 
-export default function Ratings() {
+export default function Ratings({ onRatingChange }) {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(null);
 
+  const handleRatingClick = (ratingValue) => {
+    setRating(ratingValue);
+    onRatingChange(ratingValue); // Pass selected rating to parent component
+  };
+
   return (
     <div className='flex text-center justify-center'>
-      {[...Array(5)].map((star, index) => {
+      {[...Array(3)].map((star, index) => {
         const ratingValue = index + 1;
 
         return (
@@ -16,7 +21,7 @@ export default function Ratings() {
               type="radio"
               name="rating"
               value={ratingValue}
-              onClick={() => setRating(ratingValue)}
+              onClick={() => handleRatingClick(ratingValue)}
               style={{ display: 'none' }}
             />
             <FaStar
@@ -29,7 +34,6 @@ export default function Ratings() {
           </label>
         );
       })}
-     
     </div>
   );
 }

@@ -5,6 +5,7 @@ import Cart from "../pages/Cart.jsx/Cart";
 import Register from "../pages/Register/Register";
 import Profile from "../atom/profile/Profile";
 import Admin from "../pages/Admin/Admin";
+import ListBrands from "../pages/ListBrands/ListBrands";
 // import Dashboard from "@components/page/Dashboard";
 // import StudentList from "@components/page/StudentList";
 // import StudentInfo from "@components/page/StudentInfo";
@@ -28,19 +29,27 @@ const publicRoutes = [
     path: "/register",
     component: Register,
   },
-  {
-    path: "/admin",
-    component: Admin,
-  },
 ];
 
 const adminRoutes = [
+  {
+      path: '/admin',
+      component: Admin,
+  },
+  {
+      path: '/admin/brands',
+      component: ListBrands,
+  },
+]
+
+
+const userRoutes = [
   {
     path: "/home",
     component: Homepage,
   },
   {
-    path: "/product",
+    path: "/product/:id",
     component: ProductDetail,
   },
   {
@@ -100,4 +109,4 @@ const adminRoutes = [
   // },
 ];
 
-export { publicRoutes, adminRoutes };
+export { publicRoutes, userRoutes,adminRoutes };

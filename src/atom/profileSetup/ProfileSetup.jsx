@@ -8,13 +8,13 @@ import {
 } from "tw-elements-react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-export default function DropdownLinkButton({children}) {
+export default function ProfileSetup({children, data}) {
 const navigate = useNavigate();
+
 const handlogout = () =>{
   localStorage.removeItem("accessToken")
   navigate('/')
 }
-
 
   return (
     <TEDropdown className="flex justify-center">

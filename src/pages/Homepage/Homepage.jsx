@@ -54,7 +54,7 @@ export default function Homepage() {
               Price: ${item?.price}
             </p>
             <Link
-              to={`/product`}
+              to={`/product/${item?._id}`}
               className="flex flex-col justify-center w-full max-w-lg mx-auto"
             >
               <button className="flex items-center justify-center w-full px-2 py-2 mt-4 font-medium tracking-wide text-white capitalize transition-colors duration-200 transform bg-gray-800 rounded-md hover:bg-gray-700 focus:outline-none focus:bg-gray-700">
