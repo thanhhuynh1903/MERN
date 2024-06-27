@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import GetAllBrandbyId from '../../api/getAllBrandbyId';
 import UpdateBrand from '../../api/UpdateBrand';
 
 const style = {
@@ -25,20 +26,34 @@ const validationSchema = Yup.object({
     brandName: Yup.string().required('Brand Name is required'),
 });
 
-export default function UpdateBrandModal({ open, handleClose, brandId, refreshBrandList }) {
+export default function UpdateBrandModal({ open, handleClose, brandId }) {
+    const [initialValues, setInitialValues] = useState({ brandName: '' });
+
+    useEffect(() => {
+        const fetchBrandDetails = async () => {
+            if (brandId) {
+                try {
+                    const response = await GetAllBrandbyId(brandId); // Fetch brand details by ID
+                    setInitialValues({ brandName: response.brandName });
+                } catch (error) {
+                    console.error('Error fetching brand details:', error);
+                }
+            }
+        };
+
+        fetchBrandDetails();
+    }, [brandId]);
+
     const formik = useFormik({
-        initialValues: {
-            brandName: '',
-        },
+        initialValues,
+        enableReinitialize: true,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             try {
-                await UpdateBrand(brandId, { brandName: values.brandName });
+                await UpdateBrand(brandId, values);
                 handleClose();
-                refreshBrandList(); // Refresh brand list after update
             } catch (error) {
                 console.error('Error updating brand:', error);
-                // Optionally: handle error (e.g., show an error message)
             }
         },
     });
@@ -68,7 +83,7 @@ export default function UpdateBrandModal({ open, handleClose, brandId, refreshBr
                                 borderRadius: '10px 10px 0 0 ',
                             }}
                         >
-                            Edit brand
+                            Update Brand
                         </div>
                         <HighlightOffIcon
                             onClick={onClose}
@@ -113,7 +128,7 @@ export default function UpdateBrandModal({ open, handleClose, brandId, refreshBr
                                         borderRadius: '10px',
                                     }}
                                 >
-                                    Save
+                                    Update
                                 </Button>
                             </div>
                         </form>

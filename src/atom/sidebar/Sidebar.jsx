@@ -36,7 +36,7 @@ export default function Sidebar({ setSelectedBrand }) {
               </Link>
               <MdOutlineKeyboardArrowRight />
             </div>
-            {brandList.map((item, index) => (
+            {brandList?.map((item, index) => (
               <div
                 key={index}
                 className={`flex w-full justify-between items-center mb-2 border-b-2 py-2`}
@@ -44,9 +44,9 @@ export default function Sidebar({ setSelectedBrand }) {
                 <Link
                   to="#"
                   className="block font-medium text-gray-500 dark:text-gray-300 hover:underline"
-                  onClick={() => setSelectedBrand(item._id)}
+                  onClick={() => setSelectedBrand(item?._id)}
                 >
-                  {item.brandName}
+                  {item?.brandName}
                 </Link>
                 <MdOutlineKeyboardArrowRight />
               </div>

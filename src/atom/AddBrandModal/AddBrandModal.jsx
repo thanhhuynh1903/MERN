@@ -25,7 +25,7 @@ const validationSchema = Yup.object({
     brandName: Yup.string().required('Brand Name is required'),
 });
 
-export default function AddBrandModal({ open, handleClose, addBrandToList }) {
+export default function AddBrandModal({ open, handleClose, onAddBrandSuccess }) {
     const formik = useFormik({
         initialValues: {
             brandName: '',
@@ -33,8 +33,8 @@ export default function AddBrandModal({ open, handleClose, addBrandToList }) {
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             try {
-                const newBrand = await AddBrand(values);
-                addBrandToList(newBrand); // Update the brand list
+                await AddBrand(values);
+                onAddBrandSuccess(); // Trigger brand list refresh
                 handleClose();
             } catch (error) {
                 console.error('Error adding brand:', error);

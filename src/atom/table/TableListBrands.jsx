@@ -1,4 +1,3 @@
-// src/components/TableListBrands.jsx
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
@@ -6,43 +5,32 @@ import GetAllBrand from '../../api/getAllBrand';
 import DeleteBrand from '../../api/DeleteBrand';
 import Moreicon from "../../atom/MoreIcon/MoreIcon"
 
-export default function TableListBrands({ open, handleClose, handleOpen }) {
+export default function TableListBrands({ open, handleClose, handleOpen, refresh }) {
     const [rowList, setRowList] = React.useState([]);
 
     const fetchApi = async () => {
         try {
             const response = await GetAllBrand();
-            // Add sequential 'id' field to each row
             const rowsWithSequentialId = response.map((row, index) => ({
-                id: index + 1, // Sequential ID starting from 1
+                id: index + 1,
                 ...row,
             }));
             setRowList(rowsWithSequentialId);
         } catch (error) {
             console.error('Error fetching brand list:', error);
-            // Handle error state or show error message to user
         }
-    }
+    };
 
     React.useEffect(() => {
         fetchApi();
-    }, []);
-
-    const refreshBrandList = async () => {
-        try {
-            await fetchApi();
-        } catch (error) {
-            console.error('Error refreshing brand list:', error);
-        }
-    };
+    }, [refresh]); // Re-fetch the list whenever refresh state changes
 
     const handleDeleteBrand = async (brandId) => {
         try {
             await DeleteBrand(brandId);
-            refreshBrandList(); // Refresh brand list after deletion
+            fetchApi();
         } catch (error) {
             console.error('Error deleting brand:', error);
-            // Optionally: handle error (e.g., show an error message)
         }
     };
 
@@ -57,10 +45,10 @@ export default function TableListBrands({ open, handleClose, handleOpen }) {
             width: 160,
             renderCell: (params) => (
                 <Moreicon
-                    brandId={params.row._id} // Assuming '_id' is the brand ID field
+                    brandId={params.row._id}
                     handleOpen={handleOpen}
                     handleClose={handleClose}
-                    refreshBrandList={refreshBrandList} // Pass refresh function to Moreicon
+                    refreshBrandList={fetchApi} // Pass refresh function to Moreicon
                 />
             ),
         },

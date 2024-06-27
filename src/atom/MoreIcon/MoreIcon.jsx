@@ -1,69 +1,46 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
+import React from 'react';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import EditIcon from '@mui/icons-material/Edit';
-import ClearIcon from '@mui/icons-material/Clear';
+import { useState } from 'react';
 import DeleteBrand from '../../api/DeleteBrand';
-import UpdateBrandModal from '../UpdateBrandModal/UpdateBrandModal'; // Import the UpdateBrandModal component
-
 export default function Moreicon({ brandId, handleOpen, handleClose, refreshBrandList }) {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleCloseMenu = () => {
+    const handleMenuClose = () => {
         setAnchorEl(null);
     };
 
-    const handleDelete = async () => {
-        try {
-            await DeleteBrand(brandId);
-            handleCloseMenu();
-            refreshBrandList(); // Trigger refresh after delete
-        } catch (error) {
-            console.error('Error deleting brand:', error);
-            // Optionally: handle error (e.g., show an error message)
-        }
+    const handleUpdateClick = () => {
+        handleOpen(brandId);
+        handleMenuClose();
+    };
+
+    const handleDeleteClick = async () => {
+        await DeleteBrand(brandId);
+        refreshBrandList();
+        handleMenuClose();
     };
 
     return (
-        <div>
-            <Button
-                aria-controls={anchorEl ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                onClick={handleClick}
-            >
-                <MoreHorizIcon style={{ color: 'black' }} />
-            </Button>
+        <>
+            <IconButton onClick={handleClick}>
+                <MoreVertIcon />
+            </IconButton>
             <Menu
-                id="basic-menu"
                 anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleCloseMenu}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                }}
+                open={open}
+                onClose={handleMenuClose}
             >
-                <MenuItem
-                    onClick={() => {
-                        handleOpen();
-                        handleCloseMenu();
-                    }}
-                >
-                    <EditIcon className="mr-6" style={{ color: 'green' }} />
-                    Edit
-                </MenuItem>
-                <MenuItem onClick={handleDelete}>
-                    <ClearIcon className="mr-6" style={{ color: 'red' }} />
-                    Delete
-                </MenuItem>
+                <MenuItem onClick={handleUpdateClick}>Update</MenuItem>
+                <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
             </Menu>
-
-            {/* Modal for updating brand name */}
-        </div>
+        </>
     );
 }

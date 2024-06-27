@@ -25,8 +25,8 @@ export default function Homepage() {
 
   useEffect(() => {
     if (selectedBrand) {
-      const filtered = watchesList.filter(
-        (watch) => watch.brand._id === selectedBrand
+      const filtered = watchesList?.filter(
+        (watch) => watch?.brand?._id === selectedBrand
       );
       setFilteredWatches(filtered);
     } else {
